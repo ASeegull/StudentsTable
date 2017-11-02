@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People Table</title>
+  <link href="../style.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<main class="user-options">
+  <header>
+    <h1>People Table</h1>
+    <hr/>
+  </header>
+
+  <div class="registry">
+    <form>
+      <input type="text" name="name" placeholder="John" />
+      <label>
+        <input type="radio" name="sex" value="Male" checked>Male
+      </label>
+      <label>
+        <input type="radio" name="sex" value="Female">Female
+      </label>
+      <label>
+        <input type="radio" name="sex" value="Other">Other
+      </label>
+      <input type="date" name="birth-date" placeholder="dd.mm.yy" />
+      <input type="text" name="address" placeholder="Lviv, Naukova-Str., 28" />
+      <input type="tel" name="phone" placeholder="+380935673950" />
+      <input type="email" name="email" placeholder="user@gmail.com" />
+      <input type="submit" value="Save" disabled/>
+    </form>
+<div class="user-list"></div>
+  </div>
+  <div class="user-table">
+    <table>
+      <thead>
+      <tr >
+        <th>Name</th>
+        <th>Sex</th>
+        <th>Birth date</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Email</th>
+      </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+  </div>
+</main>
+
+<script src="../scripts/jquery-3.2.1.min.js"></script>
+<script src="../scripts/people_table.js"></script>
+</body>
+</html>
