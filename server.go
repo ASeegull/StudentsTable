@@ -1,17 +1,19 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	//"encode/json"
 )
 
+func ServeStudentsTable(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/views/studentstable.html")
+}
+
 func main() {
+	http.HandleFunc("/students_table/", ServeStudentsTable)
 	http.Handle("/", http.FileServer(http.Dir("public")))
-	http.ListenAndServe(":3000", nil)
-	http.HandleFunc("/students_table", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "/views/studentstable.html")
-	})
-	// HandleError()
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
 
 // type Student struct {
