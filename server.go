@@ -1,10 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
-	"encode/json"
 )
 
 func ServeStudentsTable(w http.ResponseWriter, r *http.Request) {
@@ -12,9 +13,26 @@ func ServeStudentsTable(w http.ResponseWriter, r *http.Request) {
 }
 
 func ReceiveStudentData(w http.ResponseWriter, r *http.Request) {
-	r.()
-	fmt.Println(r.Form)
-	fmt.Println(r.FormValue("name"))
+	student := Student{}
+	defer r.Body.Close()
+	jsn, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Fatal("Error occered while reading request body: ", err)
+	}
+	err = json.Unmarshal(jsn, &student)
+	if err != nil {
+		log.Fatal("Error occured while decoding request body: ", err)
+	}
+	SaveStudent(&student)
+}
+
+func SaveStudent(student *Student) {
+	studentJSON, _ := json.Marshal(student)
+	err := ioutil.WriteFile("students.json", studentJSON, 0644)
+	if err != nil {
+		log.Fatal("Error occured while writing to JSON file: ", err)
+	}
+	fmt.Printf("%+v", studentJSON)
 }
 
 func main() {
@@ -25,10 +43,10 @@ func main() {
 }
 
 type Student struct {
-	Name      string `json: "name"`
+	Name      string `json:"name"`
 	Sex       string `json:"sex"`
 	BirthDate string `json:"birthDate"`
-	Address   string `json: "address"`
+	Address   string `json:"address"`
 	Email     string `json:"email"`
-	Phone     string `json:"string"`
+	Phone     string `json:"phone"`
 }
