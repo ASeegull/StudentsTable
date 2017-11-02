@@ -6,7 +6,17 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
+
+type Student struct {
+	Name      string `json:"name"`
+	Sex       string `json:"sex"`
+	BirthDate string `json:"birthDate"`
+	Address   string `json:"address"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone"`
+}
 
 func ServeStudentsTable(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/views/studentstable.html")
@@ -36,17 +46,13 @@ func SaveStudent(student *Student) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	http.HandleFunc("/students_table/", ServeStudentsTable)
 	http.HandleFunc("/save_student", ReceiveStudentData)
 	http.Handle("/", http.FileServer(http.Dir("public")))
-	log.Fatal(http.ListenAndServe(":3000", nil))
-}
-
-type Student struct {
-	Name      string `json:"name"`
-	Sex       string `json:"sex"`
-	BirthDate string `json:"birthDate"`
-	Address   string `json:"address"`
-	Email     string `json:"email"`
-	Phone     string `json:"phone"`
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
