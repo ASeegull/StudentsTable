@@ -49,6 +49,7 @@ function saveUser(e) {
   user.getFormValues();
   user.addTableRow();
   user.addCard();
+  saveStudent(user.getUserData());
   clearInput();
   $submit.disabled = true;
 }
@@ -57,12 +58,17 @@ User.prototype.setId = function () {
   this.id = Math.floor(Math.random() * 1000);
 };
 
+User.prototype.getUserData = function () {
+  return [this.name, this.sex, this.birth_date, this.address, this.phone, this.email];
+};
+
+
 User.prototype.addTableRow = function () {
   var $tbody = d.querySelector('tbody');
   var createRow = d.createElement('tr');
   createRow.setAttribute('data-id', this.id);
   $tbody.appendChild(createRow);
-  var userData = [this.name, this.sex, this.birth_date, this.address, this.phone, this.email];
+  var userData = user.getUserData();
   var $tr = d.querySelector('[data-id=\"' + this.id + '\"]');
   userData.forEach(function (item) {
     var $tcell = d.createElement('td');
@@ -83,7 +89,6 @@ User.prototype.addCard = function () {
 function showTableRow (e) {
   var selectedUser = e.target.getAttribute('data-id');
   var $tr = d.querySelector('tr[data-id=\"' + selectedUser + '\"]');
-  console.log($tr);
   $tr.style.display = 'table-row';
 }
 
@@ -139,4 +144,22 @@ function checkDate(elem, validInput) {
     }
   }
   return validInput;
+}
+
+function saveStudent(studentData) {
+  studentData = {
+    name: studentData[0],
+    sex: studentData[1],
+    birthDate: studentData[2],
+    address: studentData[3],
+    phone: studentData[4],
+    email: studentData[5]
+  }
+  studentData = JSON.stringify(studentData);
+  $.ajax({
+    type: "POST",
+    url: "/save_student",
+    data: studentData,
+    contentType:  'application/json'
+  });
 }
