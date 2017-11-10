@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	// "strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -18,7 +17,7 @@ var db *sql.DB
 type Student struct {
 	ID           string `json:"id"`
 	Student_name string `json:"student_name"`
-	Birth_date   string `json:"birth_date"`
+	Birth_date   string `json:"birthdate"`
 	Address      string `json:"address"`
 	Email        string `json:"email"`
 	Phone        string `json:"phone"`
@@ -109,21 +108,19 @@ func EditStudent(w http.ResponseWriter, req *http.Request) {
 	}
 	var query string
 	for key, value := range updateValues {
-		query += fmt.Sprintf("%v='%v',", key, value)
+		query += fmt.Sprintf(" %v = '%v',", key, value)
 	}
-	query = query[:len(query)-1]
-	fmt.Printf("Query: %s\n", query)
-	stmt, err := db.Prepare("UPDATE students SET ? WHERE id=?;")
-	fmt.Printf("Statement: %v\n", stmt)
+	query = "UPDATE students SET " + query[:len(query)-1] + " WHERE id = ?"
+	stmt, err := db.Prepare(query)
 	if err != nil {
 		log.Fatal("Error occured while creating insert statement: ", err)
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(query, id)
+	res, err := stmt.Exec(id)
 	if err != nil {
 		log.Fatal("Error occured while inserting into db: ", err)
 	}
-	fmt.Printf("%s", res)
+	fmt.Printf("%v", res)
 }
 
 func CreateStudent(w http.ResponseWriter, req *http.Request) {
@@ -141,5 +138,5 @@ func CreateStudent(w http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		log.Fatal("Error occured while inserting into db: ", err)
 	}
-	fmt.Printf("%s", res)
+	fmt.Printf("%v", res)
 }
