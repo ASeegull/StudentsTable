@@ -1,0 +1,7 @@
+body {
+    color: blueviolet;
+}
+
+#reset:hover {
+    cursor: pointer;
+}
